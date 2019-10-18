@@ -1,58 +1,24 @@
 # test-disabling-loading-routes
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This project was created to demonstrate that adding a `loading` action to your
+application route (or technically any level) will allow that action
+implementation to control if loading states or substates are entered.
 
-## Prerequisites
+The basic implementation is:
 
-You will need the following things properly installed on your computer.
+```js
+export default class ApplicationRoute extends Route {
+  @action loading() {
+    // for example, you can decide to use loading states or not based on the
+    // query string
+    if (!window.location.search.includes('skipLoading')) {
+      return true;
+    }
+  }
+}
+```
 
-* [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/)
-* [Yarn](https://yarnpkg.com/)
-* [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+In this demo, navigating should have the following results:
 
-## Installation
-
-* `git clone <repository-url>` this repository
-* `cd test-disabling-loading-routes`
-* `yarn install`
-
-## Running / Development
-
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
-
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
-
-### Linting
-
-* `yarn lint:hbs`
-* `yarn lint:js`
-* `yarn lint:js --fix`
-
-### Building
-
-* `ember build` (development)
-* `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+* when navigating to `/posts/`, the route has a 3s delay but shows `Loading!` while it waits
+* when navigating to `/posts/?skipLoading`, the route has a 3s delay but shows nothing while loading
